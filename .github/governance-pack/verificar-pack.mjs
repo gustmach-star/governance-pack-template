@@ -174,7 +174,7 @@ function verificarAdrs() {
       problemas.push('«Alternativas descartadas» necesita al menos una opción en viñeta')
     }
     const marcador = buscarMarcador(texto)
-    if (marcador) problemas.push(`queda un marcador de plantilla sin llenar: ${marcador}`)
+    if (marcador) problemas.push(`queda un marcador de plantilla sin llenar: \`${marcador}\``)
 
     if (problemas.length) seccion.errores.push(`\`${nombre}\`: ${problemas.join('; ')}.`)
     else seccion.correctos.push(`\`${nombre}\``)
@@ -217,7 +217,7 @@ function verificarInventario() {
   else if (contarVinetas(noRecolectamos) < 1)
     seccion.errores.push('«Lo que NO recolectamos» necesita al menos un dato en viñeta.')
   const marcador = buscarMarcador(texto)
-  if (marcador) seccion.errores.push(`Queda un marcador de plantilla sin llenar: ${marcador}`)
+  if (marcador) seccion.errores.push(`Queda un marcador de plantilla sin llenar: \`${marcador}\``)
   if (!seccion.errores.length) seccion.correctos.push(`${datos.length} datos inventariados`)
 }
 
@@ -257,11 +257,11 @@ function verificarRiesgos() {
       }
     }
     if (estado && !/^(hecho|pendiente|en curso)$/i.test(estado)) {
-      seccion.avisos.push(`Fila ${numero}: el estado «${estado}» no es Hecho, Pendiente ni En curso.`)
+      seccion.avisos.push(`Fila ${numero}: el estado \`${estado}\` no es Hecho, Pendiente ni En curso.`)
     }
   })
   const marcador = buscarMarcador(texto)
-  if (marcador) seccion.errores.push(`Queda un marcador de plantilla sin llenar: ${marcador}`)
+  if (marcador) seccion.errores.push(`Queda un marcador de plantilla sin llenar: \`${marcador}\``)
   if (!seccion.errores.length) seccion.correctos.push(`${datos.length} riesgos registrados`)
 }
 
@@ -282,7 +282,7 @@ function verificarAgents() {
     seccion.avisos.push('No menciona `docs/adr/`: conviene pedirle al agente que lea los ADRs antes de cambiar código.')
   }
   const marcador = buscarMarcador(texto)
-  if (marcador) seccion.errores.push(`Queda un marcador de plantilla sin llenar: ${marcador}`)
+  if (marcador) seccion.errores.push(`Queda un marcador de plantilla sin llenar: \`${marcador}\``)
   if (!seccion.errores.length) seccion.correctos.push(`${reglas} reglas`)
 }
 

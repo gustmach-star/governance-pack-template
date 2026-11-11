@@ -52,6 +52,8 @@ El pack va en **el repositorio de su propio proyecto**, no en una copia de esta 
 
 5. Suban la rama y abran un pull request **dentro de su propio repo**, hacia su rama principal. El bot comenta en el PR qué falta.
 
+   La descripción del PR va a salir vacía: GitHub toma la plantilla de PR de la rama principal, y ahí todavía no está. Copien en la descripción el checklist de `.github/pull_request_template.md`.
+
 ## Qué revisa el bot y qué no
 
 Revisa la **forma**: que existan los archivos, que cada ADR tenga estado, fecha, quién decide y sus cinco secciones, que el inventario use las categorías de la Ley 8968 y tenga «Lo que NO recolectamos», que haya al menos tres riesgos completos, que `AGENTS.md` tenga al menos cinco reglas y que no queden marcadores sin llenar.
