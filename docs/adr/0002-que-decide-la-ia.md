@@ -1,37 +1,23 @@
-# ADR-0002: <qué decide la IA y qué decide una persona, en una frase>
+# 0002. Qué decide la IA
 
-- Estado: Propuesto
-- Fecha: <AAAA-MM-DD>
-- Decide: <nombre y rol de quien responde por esta decisión>
-
-<!--
-Este es el ADR más importante del pack. Pregúntense:
-- ¿La IA ordena, filtra, puntúa, resume o recomienda algo sobre una persona?
-- ¿Quién ve el resultado? ¿Puede corregirlo o reclamar?
-- ¿Qué decisiones NUNCA se automatizan en su sistema?
-
-Ejemplo real (portal de empleo en producción):
-«La IA solo extrae campos a un esquema fijo; nunca puntúa, ordena, resume méritos ni
-descarta candidatos. El resultado se muestra para revisión y nada se publica sin
-confirmación de la persona.»
--->
+- Estado: Aceptado
+- Fecha: 2026-11-13
+- Decide: Luis Alberto Méndez Pozo, Desarrollador Full-Stack
 
 ## Contexto
-
-<Qué hace la IA hoy en su producto y sobre quién recae lo que produce.>
+En la arquitectura del sistema de comercio electrónico `tienda_online`, es fundamental establecer los límites operativos de la tecnología para proteger la integridad de los datos de los clientes y el inventario.
 
 ## Decisión
-
-<Lista, en frases verificables, de lo que la IA hace y de lo que nunca hace. Quién revisa o confirma lo que la IA produce antes de que tenga efecto.>
+La Inteligencia Artificial **no toma decisiones autónomas** sobre las transacciones del negocio. Específicamente:
+- La IA no modifica stocks, no cancela pedidos ni altera precios de manera automática.
+- Toda actualización de inventario se ejecuta mediante lógica determinista en el servidor utilizando procedimientos almacenados (`ActualizarStockProducto`).
+- Cualquier cambio o inserción masiva de datos requiere la validación y ejecución manual por parte del administrador del sistema.
 
 ## Alternativas descartadas
-
-- <Dejar que la IA decida X sola>: <por qué no>.
+- Delegar la gestión de inventarios y estados de pedidos a un agente autónomo de IA: descartado por el riesgo de errores lógicos o pérdidas de stock involuntarias.
 
 ## Consecuencias
-
-<Qué cuesta mantener a una persona en el ciclo. Qué riesgo se evita.>
+- Cumplimiento estricto del principio de supervisión humana y trazabilidad absoluta de las operaciones de compra-venta.
 
 ## Cómo se verifica
-
-<Dónde está el paso de confirmación humana en el código. Qué test comprueba que la IA no puede ejecutar la acción sola.>
+- Inspeccionando el código fuente y la base de datos para confirmar que no existen triggers o procesos automáticos de IA que modifiquen tablas transaccionales sin intervención humana.
