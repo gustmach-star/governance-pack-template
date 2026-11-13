@@ -1,25 +1,24 @@
 # Inventario de datos
 
-No se puede gobernar lo que no se sabe que se tiene. Una fila por cada dato que el sistema guarda, recibe o envía a un tercero, incluido el proveedor del modelo de IA.
+No se puede gobernar lo que no se sabe que se tiene. Este inventario registra cada dato que el sistema Almacéntrico recibe, almacena o comparte con terceros, incluyendo la base de datos relacional MySQL y el proveedor de inferencia de Inteligencia Artificial (DeepSeek).
 
 | Dato | ¿Personal? | Categoría (Ley 8968, art. 9) | De dónde viene | Dónde se guarda | ¿Sale a un tercero? ¿A quién? | Cuánto se conserva | Quién puede verlo |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| <dato> | <Sí o No> | <categoría, o «No aplica»> | <origen> | <servicio y tabla> | <No, o a quién y para qué> | <plazo> | <roles> |
-| <dato> | <Sí o No> | <categoría, o «No aplica»> | <origen> | <servicio y tabla> | <No, o a quién y para qué> | <plazo> | <roles> |
-
-<!--
-Ejemplo de fila bien llenada:
-| Texto del CV | Sí | Acceso restringido | Lo sube el usuario | Supabase Storage | Sí: proveedor de IA, solo para extraer campos | 30 días | El usuario |
-
-Categorías de la Ley 8968 (art. 9):
-- Sensibles: origen racial o étnico, opiniones políticas, convicciones religiosas, salud,
-  vida y orientación sexual; la definición del art. 3 incluye la condición socioeconómica
-  y la información biomédica o genética. Si aparece uno, expliquen en un ADR por qué lo necesitan.
-- Acceso restringido: de interés solo para la persona o la administración (correo, teléfono, dirección).
-- Acceso irrestricto: los que constan en bases públicas de acceso general.
-- Crediticios: comportamiento crediticio de la persona.
--->
+| Correo electrónico y nombre del operador | Sí | Acceso restringido | Formulario de registro o alta de usuario (`/api/auth/register`) | MySQL tabla `usuarios` (columnas `nombre`, `correo`) | No: se procesa únicamente en el backend para emitir y validar el token JWT | Mientras la cuenta esté activa; se borra con solicitud de baja del operador | El propio usuario autenticado y administradores del sistema |
+| Hash de contraseña del operador | Sí | Acceso restringido | Formulario de registro o cambio de clave en cliente web | MySQL tabla `usuarios` (columna `password_hash`, encriptada con bcrypt a 12 rondas) | No: jamás sale del servidor ni se expone en respuestas HTTP | Mientras la cuenta exista; se sobreescribe ante cambios | Nadie: el hash es irreversible y se evalúa solo en login |
+| Nombre, teléfono y correo de contactos de clientes | Sí | Acceso restringido | Formulario de clientes y contactos (`/api/clientes`, `/api/contactos_clientes`) | MySQL tablas `clientes` y `contactos_clientes` | No: uso exclusivo de facturación, emisión de cotizaciones y entrega | Durante la relación comercial y hasta 5 años por requisitos tributarios | Usuarios con roles de ventas, administración y auditoría |
+| Dirección física y entrega de clientes | Sí | Acceso restringido | Formulario de direcciones de entrega (`/api/direcciones_clientes`) | MySQL tabla `direcciones_clientes` | No: solo utilizada internamente para guías de remisión y logística | Durante la relación comercial y archivo fiscal | Operadores logísticos, despachadores y administradores |
+| Nombre, teléfono y correo de contactos de proveedores | Sí | Acceso restringido | Formulario de proveedores (`/api/proveedores`, `/api/contactos_proveedores`) | MySQL tablas `proveedores` y `contactos_proveedores` | No: información operacional para gestión de compras | Duración del vínculo comercial mercantil | Compradores, administradores y auditores internos |
+| Catálogo de productos, SKU, costos de lista y precios | No | No aplica | Módulo de inventario y compras (`/api/productos`, `/api/productos_proveedores`) | MySQL tablas `productos`, `productos_proveedores` | Sí: se envían SKU, descripción y costos de referencia a DeepSeek API para cotización asistida | Permanente en el historial de catálogo de la empresa | Todos los usuarios autenticados del sistema |
+| Existencias en almacén y registros de kardex | No | No aplica | Módulo de inventario (`/api/existencias`, `/api/movimientos_inventario`) | MySQL tablas `existencias`, `movimientos_inventario` | Sí: se envían cantidades agregadas de stock y ventas a DeepSeek API para sugerir reabastecimiento | Indefinido: histórico de auditoría de trazabilidad física | Operadores de almacén, compras y administradores |
+| Órdenes de compra y pedidos de venta | No | No aplica | Módulos comerciales (`/api/ordenes_compra`, `/api/pedidos_venta`) | MySQL tablas `ordenes_compra`, `pedidos_venta` | No: las transacciones de compra/venta se consolidan dentro del ERP | 5 años según legislación contable y comercial | Compras, ventas, contabilidad y administradores |
+| Telemetría, objetivo operativo y prompt de análisis | No | No aplica | Formulario del centro de agentes (`/api/agentes/analisis`, incluye objetivo de texto libre de hasta 250 caracteres sanitizado) | MySQL tabla `ejecuciones_agentes` | Sí: prompt con cifras técnicas y objetivo operativo remitido vía HTTPS a DeepSeek API | 12 meses para auditoría de recomendaciones de la IA | Administradores, analistas de abastecimiento y auditores |
 
 ## Lo que NO recolectamos
 
-- <dato que decidieron no pedir>: <por qué no lo necesitan>
+- **Datos sensibles (salud, origen racial, convicciones religiosas o políticas, datos biométricos):** Almacéntrico es un sistema exclusivo de control de inventario y logística comercial; no existe justificación operativa ni legal para recolectar información íntima de las personas.
+- **Datos crediticios o financieros personales:** No se solicitan historiales crediticios de burós privados ni información patrimonial personal de colaboradores o compradores.
+- **Datos de instrumentos de pago completos (números de tarjeta de crédito, débito o CVV):** Las transacciones comerciales se gestionan por transferencias bancarias institucionales o crédito comercial; la aplicación no procesa ni almacena números de tarjetas plásticas.
+- **Geolocalización GPS en tiempo real de clientes o transportistas:** Solo se guardan direcciones textuales de entrega fijadas voluntariamente por el cliente para la factura y despacho de mercadería.
+- **Datos personales en el objetivo de análisis de IA:** El campo de objetivo libre (hasta 250 caracteres) está restringido a parámetros operacionales de inventario; las reglas del sistema y del personal prohíben ingresar nombres, cédulas o datos de personas en las solicitudes enviadas al centro de agentes.
+
