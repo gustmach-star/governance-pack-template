@@ -1,19 +1,7 @@
-# Registro de riesgos
+# Registro de riesgos · tienda_online
 
-Al menos tres riesgos, cada uno con quién sale afectado y una mitigación que ya exista o que tenga responsable. Guía: [OWASP Top 10 para aplicaciones con LLM](https://genai.owasp.org/llm-top-10/) y [OWASP Top 10 para aplicaciones agénticas](https://genai.owasp.org/resource/2025-12-09/owasp-top-10-for-agentic-applications-for-2026).
-
-| # | Riesgo | Quién sale afectado | Probabilidad (B/M/A) | Impacto (B/M/A) | Mitigación | Estado | Responsable |
+| # | Riesgo | Quién sale afectado | Probabilidad | Impacto | Mitigación | Estado | Responsable |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| R1 | <riesgo concreto> | <personas u organización> | <B, M o A> | <B, M o A> | <qué lo previene o reduce> | <Hecho, En curso o Pendiente> | <nombre> |
-| R2 | <riesgo concreto> | <personas u organización> | <B, M o A> | <B, M o A> | <qué lo previene o reduce> | <Hecho, En curso o Pendiente> | <nombre> |
-| R3 | <riesgo concreto> | <personas u organización> | <B, M o A> | <B, M o A> | <qué lo previene o reduce> | <Hecho, En curso o Pendiente> | <nombre> |
-
-<!--
-Ejemplos de riesgos concretos (no genéricos como «hackeo»):
-- Un usuario sube un documento con instrucciones ocultas que manipulan al modelo (inyección de prompt, OWASP LLM01).
-- Datos personales terminan en los logs de errores que se envían a un servicio externo.
-- La factura del proveedor de IA se dispara por un bucle o por abuso de un usuario.
-- El agente de código borra o modifica datos de producción.
-
-Para cada riesgo pregúntense quién sale afectado, no solo qué se rompe.
--->
+| R1 | Inyección SQL al invocar el procedimiento almacenado de actualización de stock (`ActualizarStockProducto`). | Base de datos e integridad del inventario | M | A | Uso estricto de parámetros tipados de entrada (`IN p_producto_id INT`, `IN p_cantidad INT`) en los procedimientos. | Hecho | Luis Alberto Méndez |
+| R2 | Duplicidad de registros o conflictos de unicidad en correos electrónicos de clientes. | Usuarios y plataforma | B | M | Configuración de la restricción `UNIQUE` en la columna `correo` de la tabla `clientes`. | Hecho | Luis Alberto Méndez |
+| R3 | Manipulación de precios o existencias negativas mediante parámetros inválidos en las operaciones. | La tienda y los clientes | M | A | Restricciones de validación de tipos y validación lógica en el backend antes de realizar transacciones. | En curso | Luis Alberto Méndez |

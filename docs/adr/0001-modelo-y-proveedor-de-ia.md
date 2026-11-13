@@ -1,31 +1,20 @@
-# ADR-0001: <modelo y proveedor de IA que usa el proyecto, en una frase>
+# 0001. Modelo y proveedor de IA
 
-- Estado: Propuesto
-- Fecha: <AAAA-MM-DD>
-- Decide: <nombre y rol de quien responde por esta decisión>
-
-<!--
-Si su proyecto NO usa IA dentro del producto, este ADR pasa a ser:
-«Qué herramientas de IA usamos para programar y con qué reglas».
--->
+- Estado: Aceptado
+- Fecha: 2026-11-13
+- Decide: Luis Alberto Méndez Pozo, Desarrollador Full-Stack
 
 ## Contexto
-
-<Qué necesita hacer la IA en su producto. Qué restricciones hay: costo, datos personales, latencia, idioma, si el cliente u organización aliada puso condiciones. Máximo 5 líneas.>
+Para el desarrollo, diseño de esquemas relacionales y optimización de consultas SQL del proyecto `tienda_online`, se requiere documentar el uso de herramientas de asistencia basada en Inteligencia Artificial.
 
 ## Decisión
-
-<Qué modelo y qué proveedor, para qué tareas, y cómo se llama (solo desde el servidor, con qué llave). Frases verificables. Mal: «se usará IA de forma responsable». Bien: «el modelo X se llama solo desde `src/lib/ai/`, con la llave en una variable de entorno del servidor».>
+Se utiliza el modelo **Claude (Anthropic)** a través de asistentes de desarrollo en el IDE (como Cursor y Copilot) para la estructuración del código backend y la depuración de procedimientos almacenados (`Stored Procedures`). Las llaves de API o credenciales de conexión se gestionan de manera local y nunca se publican en el repositorio.
 
 ## Alternativas descartadas
-
-- <Otro modelo o proveedor>: <por qué no>.
-- <Otra opción, por ejemplo no usar IA para esta tarea>: <por qué no>.
+- Conectar agentes de IA directamente a la base de datos de producción con permisos de escritura autónomos: descartado por el riesgo crítico de alterar datos transaccionales sin supervisión.
 
 ## Consecuencias
-
-<Qué se gana y qué se pierde. Costo estimado por mes. Qué pasa si el proveedor falla o sube el precio. Qué queda pendiente.>
+- Agilidad en la creación de esquemas normalizados (1FN, 2FN, 3FN) y validación sintáctica de scripts en MySQL.
 
 ## Cómo se verifica
-
-<Dónde en el código o en las pruebas se ve que esto se cumple: un archivo, un test, una regla de CI.>
+- Revisando el historial de commits y el archivo `.gitignore` para asegurar que no se filtren credenciales ni configuraciones locales.

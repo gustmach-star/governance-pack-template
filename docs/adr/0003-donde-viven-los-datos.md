@@ -1,31 +1,22 @@
-# ADR-0003: <dónde se guardan los datos y a quién se envían, en una frase>
+# 0003. Dónde viven los datos
 
-- Estado: Propuesto
-- Fecha: <AAAA-MM-DD>
-- Decide: <nombre y rol de quien responde por esta decisión>
-
-<!--
-Si en su proyecto hay otra decisión más importante (por ejemplo, cómo manejan el texto
-que sube un usuario y que llega al modelo), pueden reemplazar este ADR por esa y
-explicarlo en el pull request.
--->
+- Estado: Aceptado
+- Fecha: 2026-11-13
+- Decide: Luis Alberto Méndez Pozo, Desarrollador Full-Stack
 
 ## Contexto
-
-<Qué datos maneja el sistema (ver el inventario), qué servicios externos usa y si hay datos personales.>
+El sistema `tienda_online` gestiona información sensible de clientes (correos, teléfonos, direcciones) y registros comerciales que deben resguardarse adecuadamente.
 
 ## Decisión
-
-<En qué servicio y en qué región viven los datos. Qué datos se envían al proveedor de IA y cuáles nunca. Cuánto tiempo se conservan y cómo se borran. Quién puede leerlos (por ejemplo, políticas RLS).>
+- Los datos relacionales del sistema se almacenan en una base de datos **MySQL** local (o instancia segura en servidor cloud).
+- Las tablas principales (`clientes`, `productos`, `pedidos`, `proveedores`) mantienen la integridad referencial mediante claves foráneas explícitas (`FOREIGN KEY`).
+- Los datos personales de los clientes no se utilizan para entrenar modelos públicos de lenguaje.
 
 ## Alternativas descartadas
-
-- <Otra forma de guardar o enviar los datos>: <por qué no>.
+- Almacenar la información de pedidos y clientes en archivos planos o bases de datos no relacionales: descartado para conservar las restricciones de unicidad y normalización.
 
 ## Consecuencias
-
-<Qué implica para la Ley 8968: consentimiento, transferencia internacional, derechos de acceso y supresión.>
+- Estructura de datos limpia, segura y con relaciones optimizadas para consultas complejas de inventario y facturación.
 
 ## Cómo se verifica
-
-<La migración, la política de acceso o el test que lo demuestra.>
+- Verificando el script DDL de creación de la base de datos `tienda_online` y las restricciones de integridad definidas en las tablas.

@@ -30,7 +30,9 @@ function nuevaSeccion(titulo) {
 
 function leer(rutaRelativa) {
   const ruta = join(RAIZ, rutaRelativa)
-  return existsSync(ruta) ? readFileSync(ruta, 'utf8') : null
+  // Normaliza CRLF (Windows) a LF: los encabezados `## Titulo` no se detectan
+  // si la línea termina en `\r`, y el reporte saldría mal en Windows.
+  return existsSync(ruta) ? readFileSync(ruta, 'utf8').replace(/\r\n?/g, '\n') : null
 }
 
 /** Minúsculas y sin tildes, para comparar títulos sin depender de acentos. */
@@ -148,7 +150,7 @@ function verificarAdrs() {
   ]
 
   for (const nombre of archivos) {
-    const texto = readFileSync(join(carpeta, nombre), 'utf8')
+    const texto = leer(join('docs', 'adr', nombre))
     const problemas = []
 
     const estado = campoDeCabecera(texto, 'Estado')

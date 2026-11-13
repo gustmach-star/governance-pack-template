@@ -1,25 +1,13 @@
-# Inventario de datos
+# Inventario de datos · tienda_online
 
-No se puede gobernar lo que no se sabe que se tiene. Una fila por cada dato que el sistema guarda, recibe o envía a un tercero, incluido el proveedor del modelo de IA.
-
-| Dato | ¿Personal? | Categoría (Ley 8968, art. 9) | De dónde viene | Dónde se guarda | ¿Sale a un tercero? ¿A quién? | Cuánto se conserva | Quién puede verlo |
+| Dato | ¿Personal? | Categoría (Ley 8968) | Origen | Destino | Almacenamiento | Retención | Seguridad |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| <dato> | <Sí o No> | <categoría, o «No aplica»> | <origen> | <servicio y tabla> | <No, o a quién y para qué> | <plazo> | <roles> |
-| <dato> | <Sí o No> | <categoría, o «No aplica»> | <origen> | <servicio y tabla> | <No, o a quién y para qué> | <plazo> | <roles> |
-
-<!--
-Ejemplo de fila bien llenada:
-| Texto del CV | Sí | Acceso restringido | Lo sube el usuario | Supabase Storage | Sí: proveedor de IA, solo para extraer campos | 30 días | El usuario |
-
-Categorías de la Ley 8968 (art. 9):
-- Sensibles: origen racial o étnico, opiniones políticas, convicciones religiosas, salud,
-  vida y orientación sexual; la definición del art. 3 incluye la condición socioeconómica
-  y la información biomédica o genética. Si aparece uno, expliquen en un ADR por qué lo necesitan.
-- Acceso restringido: de interés solo para la persona o la administración (correo, teléfono, dirección).
-- Acceso irrestricto: los que constan en bases públicas de acceso general.
-- Crediticios: comportamiento crediticio de la persona.
--->
+| Nombre del cliente | Sí | Acceso restringido | Registro de usuario | Tabla `clientes` | Base de datos MySQL | Indefinida | Campo obligatorio `NOT NULL` |
+| Correo electrónico | Sí | Acceso restringido | Registro de usuario | Tabla `clientes` y `proveedores` | Base de datos MySQL | Indefinida | Restricción `UNIQUE` |
+| Teléfono | Sí | Acceso restringido | Registro de usuario | Tabla `clientes` y `proveedores` | Base de datos MySQL | Indefinida | Tipado `VARCHAR(20)` |
+| Dirección y ciudad | Sí | Acceso restringido | Formulario de envío | Tabla `direcciones` | Base de datos MySQL | Indefinida | Relación por FK (`id_cliente`) |
+| Stock y precios | No | Acceso irrestricto | Gestión de inventario | Tabla `productos` | Base de datos MySQL | Permanente | Tipos numéricos (`DECIMAL`, `INT`) |
 
 ## Lo que NO recolectamos
-
-- <dato que decidieron no pedir>: <por qué no lo necesitan>
+- **Información biomédica, de salud u origen étnico:** La tienda no almacena datos catalogados como sensibles bajo el artículo 9 de la Ley 8968, ya que el giro comercial es exclusivamente la venta de componentes y artículos tecnológicos.
+- **Credenciales bancarias directas:** Las transacciones se derivan a pasarelas externas seguras y no guardamos números completos de tarjetas de crédito.
